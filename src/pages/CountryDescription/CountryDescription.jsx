@@ -95,14 +95,14 @@ export const CountryDescription = () => {
           </div>
 
           {/* Border Countries */}
-          <div className="mt-8">
+          <div className="mt-8 ">
             <h2 className="font-semibold mb-2 text-lg">Border Countries:</h2>
             <div className="flex flex-wrap gap-2">
               {country.borders?.length ? (
                 country.borders.map((border) => (
                   <button
                     key={border}
-                    className="rounded-xl px-6 py-1 bg-gray-200 dark:bg-white text-sm font-medium"
+                    className="rounded-xl px-6 py-1 bg-gray-200 dark:bg-white dark:text-black text-sm font-medium"
                   >
                     {border}
                   </button>
