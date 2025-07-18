@@ -1,47 +1,38 @@
-// src/hooks/useCountries.ts
-import { useEffect, useState } from "react";
-import { data_fetch } from "../services/data";
+// src/hooks/useHome.jsx
+import { useContext, useEffect, useMemo, useState } from "react";
+import { AppContext } from "../context/appContext";
 
 export const useHome = () => {
-  const [data, setData] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState("all");
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const { state, dispatch } = useContext(AppContext);
+  const { countries, loading, selectedRegion, search } = state;
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true);
-        const res = await data_fetch();
-        setData(res.data);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, []);
+  const regions = useMemo(() => {
+    return [...new Set(countries?.map((c) => c.region).filter(Boolean))];
+  }, [countries]);
 
-  const regions = [...new Set(data?.map((c) => c.region).filter(Boolean))];
+  const filteredCountries = useMemo(() => {
+    return countries
+      ?.filter((item) =>
+        selectedRegion && selectedRegion !== "all"
+          ? item.region === selectedRegion
+          : true
+      )
+      ?.filter((item) =>
+        item.name.common.toLowerCase().includes(search.toLowerCase())
+      );
+  }, [countries, selectedRegion, search]);
 
-  const filteredCountries = data
-    ?.filter((item) =>
-      selectedRegion && selectedRegion !== "all"
-        ? item.region === selectedRegion
-        : true
-    )
-    ?.filter((item) =>
-      item.name.common.toLowerCase().includes(search.toLowerCase())
-    );
-
+  const setSelectedRegion = (region) => {
+    dispatch({ type: "SET_REGION", payload: region });
+  };
+  const setSearch = (value) => {
+    dispatch({ type: "SET_SEARCH", payload: value });
+  };
   return {
-    loading,
-    filteredCountries,
+    ...state,
     regions,
-    selectedRegion,
+    filteredCountries,
     setSelectedRegion,
-    search,
     setSearch,
   };
 };

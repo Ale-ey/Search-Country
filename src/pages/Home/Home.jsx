@@ -16,11 +16,11 @@ import { useHome } from "../../hooks/useHome";
 export const Home = () => {
   const {
     loading,
-    filteredCountries,
-    regions,
     selectedRegion,
-    setSelectedRegion,
     search,
+    regions,
+    filteredCountries,
+    setSelectedRegion,
     setSearch,
   } = useHome();
 
@@ -39,7 +39,9 @@ export const Home = () => {
           />
           <Search className="absolute left-5 top-1/2 -translate-1/2 w-4 text-gray-500" />
         </div>
-        <Select onValueChange={setSelectedRegion}>
+        <Select
+          value={selectedRegion}
+          onValueChange={setSelectedRegion}>
           <SelectTrigger className="w-[180px] cursor-pointer">
             <SelectValue placeholder="Filter by Region">
               {selectedRegion === "all" || !selectedRegion
